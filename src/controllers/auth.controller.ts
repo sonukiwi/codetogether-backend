@@ -6,7 +6,7 @@ import { DB_CONFIG } from "../../config";
 import jwt from "jsonwebtoken";
 import type { JwtTokenExpiry } from "../types";
 
-async function login(accessToken: string) {
+async function login(accessToken: string, headers: any) {
   const userData = await verify_google_access_token(accessToken);
 
   if (userData.email_verified === false) {
@@ -50,6 +50,7 @@ async function login(accessToken: string) {
     },
     {
       status: 200,
+      headers,
     }
   );
 }

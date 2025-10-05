@@ -13,8 +13,30 @@ Bun.serve({
   port: process.env.SERVER_PORT,
   async fetch(req) {
     try {
+      const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(
+        ","
+      ) as string[];
+
       const url = new URL(req.url);
       const method = req.method;
+      const origin = req.headers.get("origin") as string;
+
+      const corsHeaders = {
+        "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin)
+          ? origin
+          : "",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      };
+
+      if (method === "OPTIONS") {
+        return Response.json(
+          {},
+          {
+            headers: corsHeaders,
+          }
+        );
+      }
 
       if (url.pathname === API_PATHS.LOGIN && method === "POST") {
         const validationRes = await handle_request_validation(
@@ -23,7 +45,7 @@ Bun.serve({
         );
 
         const reqBody = validationRes.data as LoginApiRequestBody;
-        return await AuthController.login(reqBody.access_token);
+        return await AuthController.login(reqBody.access_token, corsHeaders);
       }
 
       if (url.pathname === API_PATHS.ROOMS.CREATE && method === "POST") {
