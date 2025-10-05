@@ -1,11 +1,15 @@
-import type { LoginApiRequestBody } from "./types";
+import type { CreateRoomApiRequestBody, LoginApiRequestBody } from "./types";
 import AuthController from "./controllers/auth.controller";
+import RoomController from "./controllers/room.controller";
 import { AppError } from "./errors/app.error";
-import { validate_against_schema } from "./utils";
-import { loginApiRequestBodySchema } from "./schemas";
-import { RESPONSE_MESSAGES, API_PATHS } from "../config";
+import { handle_request_validation, verify_jwt_token } from "./utils";
+import {
+  createRoomRequestBodySchema,
+  loginApiRequestBodySchema,
+} from "./schemas";
+import { RESPONSE_MESSAGES, API_PATHS, AUTH_CONFIG } from "../config";
 
-const server = Bun.serve({
+Bun.serve({
   port: process.env.SERVER_PORT,
   async fetch(req) {
     try {
@@ -13,26 +17,39 @@ const server = Bun.serve({
       const method = req.method;
 
       if (url.pathname === API_PATHS.LOGIN && method === "POST") {
-        const validationRes = validate_against_schema(
+        const validationRes = await handle_request_validation(
           loginApiRequestBodySchema,
           await req.json()
         );
 
-        if (validationRes.errors.length > 0) {
-          const firstError = validationRes.errors[0];
-          const errorMessage = `${firstError?.path}: ${firstError?.message}`;
-          throw new AppError(errorMessage, 400);
-        }
-
         const reqBody = validationRes.data as LoginApiRequestBody;
         return await AuthController.login(reqBody.access_token);
+      }
+
+      if (url.pathname === API_PATHS.ROOMS.CREATE && method === "POST") {
+        const loggedInUserPayload = verify_jwt_token(
+          req.headers.get(AUTH_CONFIG.JWT_TOKEN_HEADER) as string
+        );
+
+        const validationRes = await handle_request_validation(
+          createRoomRequestBodySchema,
+          await req.json()
+        );
+
+        const reqBody = validationRes.data as CreateRoomApiRequestBody;
+        return await RoomController.create_room(
+          reqBody.type,
+          loggedInUserPayload.userId,
+          reqBody.name,
+          reqBody.description
+        );
       }
 
       return Response.json(
         {
           message: "Invalid API Path",
         },
-        { status: 404 }
+        { status: 400 }
       );
     } catch (e: unknown) {
       console.error(e);

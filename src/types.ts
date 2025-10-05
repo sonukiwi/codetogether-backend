@@ -1,5 +1,17 @@
+export type RoomType = "PUBLIC" | "PRIVATE";
+
+export type JWTPayload = {
+  userId: number;
+};
+
 export type LoginApiRequestBody = {
   access_token: string;
+};
+
+export type CreateRoomApiRequestBody = {
+  name: string;
+  description?: string;
+  type: RoomType;
 };
 
 export type GoogleTokenVerificationApiSuccessResponse = {

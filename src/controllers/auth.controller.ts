@@ -1,4 +1,4 @@
-import { verify_access_token } from "../utils";
+import { verify_google_access_token } from "../utils";
 import { RESPONSE_MESSAGES } from "../../config";
 import { AppError } from "../errors/app.error";
 import db from "../db";
@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import type { JwtTokenExpiry } from "../types";
 
 async function login(accessToken: string) {
-  const userData = await verify_access_token(accessToken);
+  const userData = await verify_google_access_token(accessToken);
 
   if (userData.email_verified === false) {
     throw new AppError(RESPONSE_MESSAGES.EMAIL_NOT_VERIFIED, 401);
