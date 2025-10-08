@@ -12,6 +12,7 @@ import { RESPONSE_MESSAGES, API_PATHS, AUTH_CONFIG } from "../config";
 Bun.serve({
   port: process.env.SERVER_PORT,
   async fetch(req) {
+    let corsHeaders = {};
     try {
       const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(
         ","
@@ -21,7 +22,7 @@ Bun.serve({
       const method = req.method;
       const origin = req.headers.get("origin") as string;
 
-      const corsHeaders = {
+      corsHeaders = {
         "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin)
           ? origin
           : "",
@@ -71,7 +72,7 @@ Bun.serve({
         {
           message: "Invalid API Path",
         },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     } catch (e: unknown) {
       console.error(e);
@@ -83,6 +84,7 @@ Bun.serve({
           },
           {
             status: e.statusCode,
+            headers: corsHeaders,
           }
         );
       } else {
@@ -92,6 +94,7 @@ Bun.serve({
           },
           {
             status: 500,
+            headers: corsHeaders,
           }
         );
       }
