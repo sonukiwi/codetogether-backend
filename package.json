@@ -11,7 +11,7 @@
     "typescript": "^5"
   },
   "scripts": {
-    "start": "bunx nodemon --watch src --ext ts --exec bun run src/index.ts"
+    "dev": "bunx nodemon --watch src --ext ts --exec bun run src/index.ts"
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.2",
