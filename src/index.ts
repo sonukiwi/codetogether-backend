@@ -1,6 +1,7 @@
 import type { CreateRoomApiRequestBody, LoginApiRequestBody } from "./types";
 import AuthController from "./controllers/auth.controller";
 import RoomController from "./controllers/room.controller";
+import UserController from "./controllers/user.controller";
 import { AppError } from "./errors/app.error";
 import { handle_request_validation, verify_jwt_token } from "./utils";
 import {
@@ -66,6 +67,15 @@ Bun.serve({
           reqBody.name,
           reqBody.description
         );
+      }
+
+      if (url.pathname === API_PATHS.GET_PROFILE && method === "GET") {
+        const loggedInUserPayload = verify_jwt_token(
+          req.headers.get(AUTH_CONFIG.JWT_TOKEN_HEADER) as string
+        );
+        const userId = loggedInUserPayload.userId;
+
+        return await UserController.get_profile(userId, corsHeaders);
       }
 
       return Response.json(

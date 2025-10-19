@@ -10,6 +10,7 @@ export const API_PATHS = {
   ROOMS: {
     CREATE: "/create-room",
   },
+  GET_PROFILE: "/profile",
 };
 
 export const DB_CONFIG = {
