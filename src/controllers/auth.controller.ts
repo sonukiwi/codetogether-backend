@@ -10,7 +10,7 @@ async function login(accessToken: string, headers: any) {
   const userData = await verify_google_access_token(accessToken);
 
   if (userData.email_verified === false) {
-    throw new AppError(RESPONSE_MESSAGES.EMAIL_NOT_VERIFIED, 401);
+    throw new AppError(RESPONSE_MESSAGES.EMAIL_NOT_VERIFIED, 400);
   }
 
   let userId: number;
