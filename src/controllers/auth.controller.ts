@@ -47,7 +47,11 @@ async function login(accessToken: string, headers: any) {
   return Response.json(
     {
       token,
-      user_data: userData,
+      user_data: {
+        name: userData.name,
+        email: userData.email,
+        picture: userData.picture,
+      },
     },
     {
       status: 200,
