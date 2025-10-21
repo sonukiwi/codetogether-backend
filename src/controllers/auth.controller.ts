@@ -47,6 +47,7 @@ async function login(accessToken: string, headers: any) {
   return Response.json(
     {
       token,
+      user_data: userData,
     },
     {
       status: 200,
