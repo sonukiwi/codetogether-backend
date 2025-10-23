@@ -78,6 +78,29 @@ Bun.serve({
         return await UserController.get_profile(userId, corsHeaders);
       }
 
+      if (url.pathname === API_PATHS.IS_TOKEN_VALID && method === "GET") {
+        let isTokenValid = false;
+
+        try {
+          verify_jwt_token(
+            req.headers.get(AUTH_CONFIG.JWT_TOKEN_HEADER) as string
+          );
+          isTokenValid = true;
+        } catch (e: unknown) {
+          isTokenValid = false;
+        }
+
+        return Response.json(
+          {
+            is_valid: isTokenValid,
+          },
+          {
+            status: 200,
+            headers: corsHeaders,
+          }
+        );
+      }
+
       return Response.json(
         {
           message: "Invalid API Path",

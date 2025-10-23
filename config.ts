@@ -11,6 +11,7 @@ export const API_PATHS = {
     CREATE: "/create-room",
   },
   GET_PROFILE: "/profile",
+  IS_TOKEN_VALID: "/is-token-valid",
 };
 
 export const DB_CONFIG = {
