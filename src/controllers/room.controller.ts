@@ -8,7 +8,8 @@ async function create_room(
   type: RoomType,
   ownerId: number,
   name: string,
-  description?: string
+  description: string,
+  headers: any
 ) {
   const roomId = uuidv4();
 
@@ -29,6 +30,7 @@ async function create_room(
     },
     {
       status: 201,
+      headers,
     }
   );
 }

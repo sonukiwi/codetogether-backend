@@ -65,7 +65,8 @@ Bun.serve({
           reqBody.type,
           loggedInUserPayload.userId,
           reqBody.name,
-          reqBody.description
+          reqBody.description,
+          corsHeaders
         );
       }
 

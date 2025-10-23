@@ -10,7 +10,7 @@ export type LoginApiRequestBody = {
 
 export type CreateRoomApiRequestBody = {
   name: string;
-  description?: string;
+  description: string;
   type: RoomType;
 };
 
