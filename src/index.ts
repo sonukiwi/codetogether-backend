@@ -1,4 +1,8 @@
-import type { CreateRoomApiRequestBody, LoginApiRequestBody } from "./types";
+import type {
+  CreateRoomApiRequestBody,
+  DoesRoomExistApiSearchParams,
+  LoginApiRequestBody,
+} from "./types";
 import AuthController from "./controllers/auth.controller";
 import RoomController from "./controllers/room.controller";
 import UserController from "./controllers/user.controller";
@@ -6,6 +10,7 @@ import { AppError } from "./errors/app.error";
 import { handle_request_validation, verify_jwt_token } from "./utils";
 import {
   createRoomRequestBodySchema,
+  doesRoomExistSearchParamsSchema,
   loginApiRequestBodySchema,
 } from "./schemas";
 import { RESPONSE_MESSAGES, API_PATHS, AUTH_CONFIG } from "../config";
@@ -99,6 +104,25 @@ Bun.serve({
             status: 200,
             headers: corsHeaders,
           }
+        );
+      }
+
+      if (url.pathname === API_PATHS.DOES_ROOM_EXIST && method === "GET") {
+        const queryParams = url.searchParams;
+
+        const validationRes = await handle_request_validation(
+          doesRoomExistSearchParamsSchema,
+          {
+            room_id: queryParams.get("room_id"),
+          }
+        );
+
+        const parsedQueryParams =
+          validationRes.data as DoesRoomExistApiSearchParams;
+
+        return await RoomController.does_room_exist(
+          parsedQueryParams.room_id,
+          corsHeaders
         );
       }
 

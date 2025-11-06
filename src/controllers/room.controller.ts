@@ -35,6 +35,25 @@ async function create_room(
   );
 }
 
+async function does_room_exist(roomId: string, headers: any) {
+  const [res] = await db.query(
+    `SELECT * FROM ${DB_CONFIG.TABLES.ROOMS.NAME} WHERE uuid = ?`,
+    [roomId]
+  );
+  const doesRoomExist = (res as any[]).length === 1;
+
+  return Response.json(
+    {
+      exists: doesRoomExist,
+    },
+    {
+      status: 200,
+      headers,
+    }
+  );
+}
+
 export default {
   create_room,
+  does_room_exist,
 };

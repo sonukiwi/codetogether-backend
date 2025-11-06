@@ -12,6 +12,7 @@ export const API_PATHS = {
   },
   GET_PROFILE: "/profile",
   IS_TOKEN_VALID: "/is-token-valid",
+  DOES_ROOM_EXIST: "/does-room-exist",
 };
 
 export const DB_CONFIG = {

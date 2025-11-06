@@ -32,3 +32,7 @@ export type ValidateAgainstSchemaResponse = {
 };
 
 export type JwtTokenExpiry = "24h";
+
+export type DoesRoomExistApiSearchParams = {
+  room_id: string;
+};
