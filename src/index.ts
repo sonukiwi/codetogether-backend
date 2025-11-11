@@ -107,7 +107,7 @@ Bun.serve({
         );
       }
 
-      if (url.pathname === API_PATHS.DOES_ROOM_EXIST && method === "GET") {
+      if (url.pathname === API_PATHS.GET_ROOM_METADATA && method === "GET") {
         const queryParams = url.searchParams;
 
         const validationRes = await handle_request_validation(
@@ -120,7 +120,7 @@ Bun.serve({
         const parsedQueryParams =
           validationRes.data as DoesRoomExistApiSearchParams;
 
-        return await RoomController.does_room_exist(
+        return await RoomController.get_room_metadata(
           parsedQueryParams.room_id,
           corsHeaders
         );

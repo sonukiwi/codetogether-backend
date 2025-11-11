@@ -35,25 +35,37 @@ async function create_room(
   );
 }
 
-async function does_room_exist(roomId: string, headers: any) {
+async function get_room_metadata(roomId: string, headers: any) {
   const [res] = await db.query(
     `SELECT * FROM ${DB_CONFIG.TABLES.ROOMS.NAME} WHERE uuid = ?`,
     [roomId]
   );
   const doesRoomExist = (res as any[]).length === 1;
 
-  return Response.json(
-    {
-      exists: doesRoomExist,
-    },
-    {
-      status: 200,
-      headers,
-    }
-  );
+  if (doesRoomExist) {
+    return Response.json(
+      {
+        metadata: (res as any[])[0],
+      },
+      {
+        status: 200,
+        headers,
+      }
+    );
+  } else {
+    return Response.json(
+      {
+        metadata: null,
+      },
+      {
+        status: 404,
+        headers,
+      }
+    );
+  }
 }
 
 export default {
   create_room,
-  does_room_exist,
+  get_room_metadata,
 };
