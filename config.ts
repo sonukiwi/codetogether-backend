@@ -24,7 +24,7 @@ export const DB_CONFIG = {
       NAME: "rooms",
       VALIDATIONS: {
         ROOM_TYPE: {
-          ALLOWED_VALUES: ["PUBLIC", "PRIVATE"],
+          ALLOWED_VALUES: ["PUBLIC"],
         },
       },
     },
